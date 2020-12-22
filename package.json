@@ -1,0 +1,28 @@
+{
+  "name": "mms_auth_project",
+  "version": "1.0.0",
+  "description": "This is an authentication API that serves a purpose to authenticate user in the system. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Apaar Dahal",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fastest-validator": "^1.9.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.6",
+    "sequelize": "^6.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npm/npm.git"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}
