@@ -1,3 +1,4 @@
+const validator = require('validator');
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -10,19 +11,16 @@ module.exports = {
       },
       firstName: {
         type: Sequelize.STRING,
-        allowNull: false,
-        minlength: 3,
+        allowNull: false
       },
       lastName: {
         type: Sequelize.STRING,
-        allowNull: false,
-        minlength: 3
+        allowNull: false
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
-        match: [ /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, 'Please add a valid email address' ]
+        unique: true
       },
       password: {
         type: Sequelize.STRING,
