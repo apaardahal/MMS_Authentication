@@ -17,6 +17,7 @@
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
     "sequelize": "^6.3.5",
+    "sequelize-express-findbyid": "^1.0.7",
     "validator": "^13.5.2"
   },
   "repository": {
