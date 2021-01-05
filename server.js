@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use('/api/v1/auth', userRoute);
 app.use(errorHandler);
 
-const port = 3000;
+const port = 3002;
 const server = app.listen(port, 
     console.log(`Server running in port ${port}`));
 

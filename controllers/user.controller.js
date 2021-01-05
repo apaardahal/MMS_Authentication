@@ -1,8 +1,10 @@
 const models = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const sef = require(`sequelize-express-findbyid`)
 const ErrorResponse = require('../utils/errorResponse');
+const sendEmail = require('../utils/sendEmail');
 
 //@description      Register User
 //@route            POST /api/v1/auth/register
@@ -86,7 +88,7 @@ const getUsers = async(req, res, next) => {
         res.status(200).json({
             success: true,
             data: users
-        })
+        });
     } catch (error) {
         res.status(400).json({
             success: false
@@ -114,9 +116,62 @@ const getSingleUser = async(req, res, next) => {
     }
 }
 
+//@description      Forget password
+//@route            GET /api/v1/user/forgotpassword
+//@access            Public
+const forgotpassword = async(req, res, next) => {
+    //ensure that you have a user with this email
+  var email = await models.User.findOne({where: { email: req.body.email }});
+  if (!email) {
+    return next(new ErrorResponse('There is no user with that email', 404));
+  }
+else{
+      //Get Reset Token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    console.log(resetToken);
+    //Hash the token 
+     const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    //token expires after one hour
+  var resetPasswordExpire = new Date();
+  resetPasswordExpire.setDate(resetPasswordExpire.getDate() + 1/24);
+
+        const dataWithToken = await models.User.update({
+            resetPasswordExpire: resetPasswordExpire,
+            resetPasswordToken: resetPasswordToken
+        }, {where: {email: req.body.email}})
+
+        //Create reset URL 
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+
+        const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+    try {
+        await sendEmail({
+        email: req.body.email,
+        subject: 'Password reset token',
+        message
+        });
+
+        res.status(200).json({ success: true, data: 'Email sent' });
+    } catch (err) {
+        console.log(err);
+        // user.resetPasswordToken = undefined;
+        // user.resetPasswordExpire = undefined;
+        return next(new ErrorResponse('Email could not be sent', 500));
+    }
+
+            res.status(200).json({
+                success: true,
+                data: resetPasswordToken
+            });
+    }
+    }
+
 module.exports = {
     register: register,
     login: login,
     getUsers: getUsers,
-    getSingleUser: getSingleUser
+    getSingleUser: getSingleUser,
+    forgotpassword: forgotpassword
 }

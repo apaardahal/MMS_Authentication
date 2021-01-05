@@ -1,4 +1,5 @@
 const validator = require('validator');
+// const { sequelize } = require('../models');
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -10,21 +11,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       firstName: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       lastName: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
       password: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
+      },
+      resetPasswordToken: {
+        type: Sequelize.STRING
+      },
+      resetPasswordExpire: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
