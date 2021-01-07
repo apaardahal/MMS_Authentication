@@ -6,6 +6,8 @@ const sef = require(`sequelize-express-findbyid`)
 const ErrorResponse = require('../utils/errorResponse');
 const sendEmail = require('../utils/sendEmail');
 
+
+
 //@description      Register User
 //@route            POST /api/v1/auth/register
 //@access            Public
@@ -67,7 +69,6 @@ const login = async(req, res, next) => {
                         token: token
                     });
                   });
-                
             }
             else{
                 res.status(401).json({
@@ -117,7 +118,7 @@ const getSingleUser = async(req, res, next) => {
 }
 
 //@description      Forget password
-//@route            GET /api/v1/user/forgotpassword
+//@route            GET /api/v1/auth/forgotpassword
 //@access            Public
 const forgotpassword = async(req, res, next) => {
     //ensure that you have a user with this email
@@ -128,17 +129,16 @@ const forgotpassword = async(req, res, next) => {
 else{
       //Get Reset Token
     const resetToken = crypto.randomBytes(20).toString('hex');
-    console.log(resetToken);
     //Hash the token 
      const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
     //token expires after one hour
-  var resetPasswordExpire = new Date();
-  resetPasswordExpire.setDate(resetPasswordExpire.getDate() + 1/24);
+    var resetPasswordExpire = new Date();
+    resetPasswordExpire.setDate(resetPasswordExpire.getDate() + 1/24);
 
-        const dataWithToken = await models.User.update({
-            resetPasswordExpire: resetPasswordExpire,
-            resetPasswordToken: resetPasswordToken
+    const dataWithToken = await models.User.update({
+        resetPasswordExpire: resetPasswordExpire,
+         resetPasswordToken: resetPasswordToken
         }, {where: {email: req.body.email}})
 
         //Create reset URL 
@@ -168,10 +168,51 @@ else{
     }
     }
 
+
+    //@description      Reset password
+    //@route            PUT /api/v1/auth/resetpassword/:resettoken
+    //@access            Public
+    const resetPassword = async(req, res, next) => {
+        // Get hashed token
+
+        const resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(req.params.token)
+        .digest('hex');
+
+        const user = await models.User.findOne({
+        resetPasswordToken,
+        // resetPasswordExpire: { [Op.gt]: Sequelize.fn('CURDATE')}
+        });
+
+        if (!user) {
+        return next(new ErrorResponse('Invalid token', 400));
+        }
+        else{
+            var passHash = bcrypt.hashSync(req.body.password, 10);
+            const updatePassword = await models.User.update({
+                password: req.body.password,
+                // resetPasswordToken = undefined,
+                // resetPasswordExpire = undefined
+            }, {where: {resetPasswordToken: resetPasswordToken}})
+            
+            res.status(200).json({
+                success: true,
+                data: 'Password Changed successfully'
+            })
+        }
+    }
+
+
+
+
+
+
 module.exports = {
     register: register,
     login: login,
     getUsers: getUsers,
     getSingleUser: getSingleUser,
-    forgotpassword: forgotpassword
+    forgotpassword: forgotpassword,
+    resetPassword: resetPassword
 }

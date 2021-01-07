@@ -3,6 +3,7 @@ const validator = require('validator');
 const {
   Model
 } = require('sequelize');
+const { options } = require('../routes/user');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -50,14 +51,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          args: [8, 20],
+          args: [8, 100],
           msg: 'Password must be between 8 to 20 charactes'
         }
       }  
     },
     resetPasswordToken: DataTypes.STRING,
     resetPasswordExpire: DataTypes.DATE
-  }, {
+  },
+    {
     sequelize,
     modelName: 'User',
   });
@@ -65,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
   //Encrypt password using bcrypt
   const bcrypt = require('bcryptjs');
   User.beforeCreate((user, options) => {
-
+    console.log("Before create called");
     return bcrypt.hash(user.password, 10)
         .then(hash => {
             user.password = hash;
@@ -73,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
         .catch(err => { 
             throw new Error(); 
         });
-});
-
+  });
+ 
   return User;
 };

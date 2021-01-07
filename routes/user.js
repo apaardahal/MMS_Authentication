@@ -10,4 +10,5 @@ router.post('/login', userController.login );
 router.get('/users', userController.getUsers );
 router.get('/user/:id', userController.getSingleUser);
 router.post('/forgotpassword', userController.forgotpassword);
+router.put('/resetpassword/:token', userController.resetPassword);
 module.exports = router;

@@ -9,8 +9,8 @@ const sendEmail = async options => {
     auth: {
     //   user: process.env.SMTP_EMAIL,
     //   pass: process.env.SMTP_PASSWORD
-      user: "43abc65bcd3615",
-      pass: "92b358cc9b6ceb"
+      user: "49635aad391aa3",
+      pass: "bd5c14fa01c63b"
     }
   });
 
