@@ -7,7 +7,6 @@ const ErrorResponse = require('../utils/errorResponse');
 const sendEmail = require('../utils/sendEmail');
 
 
-
 //@description      Register User
 //@route            POST /api/v1/auth/register
 //@access            Public
@@ -202,11 +201,6 @@ else{
             })
         }
     }
-
-
-
-
-
 
 module.exports = {
     register: register,

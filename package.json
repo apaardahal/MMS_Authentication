@@ -13,14 +13,19 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-mongo-sanitize": "^2.0.2",
+    "express-rate-limit": "^5.2.3",
     "fastest-validator": "^1.9.0",
+    "helmet": "^4.3.1",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.17",
     "nodemon": "^2.0.6",
     "sequelize": "^6.3.5",
     "sequelize-express-findbyid": "^1.0.7",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "xss-clean": "^0.1.1"
   },
   "repository": {
     "type": "git",
