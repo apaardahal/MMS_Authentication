@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser'); 
+const dotenv = require('dotenv');
 const errorHandler = require('./middleware/error');
+const morgan = require('morgan');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -8,6 +10,9 @@ const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const app = express();
 const path = require('path');
+
+// Load env vars
+dotenv.config({ path: './config/config.env' });
 
 //Route files
 const userRoute =require('./routes/user');
@@ -18,6 +23,12 @@ app.get('/',(req, res, next)=>{
 });
 
 app.use(bodyParser.json());
+
+// Dev logging middleware
+if(process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+  }
+  
 
 //Sanitize data
 app.use(mongoSanitize());
@@ -43,8 +54,9 @@ app.use(hpp());
 app.use('/api/v1/auth', userRoute);
 app.use(errorHandler);
 
-const port = 3000;
-const server = app.listen(port, 
-    console.log(`Server running in port ${port}`));
+const PORT = 3000;
+const server = app.listen(
+    PORT, 
+    console.log(`Server running in port ${PORT}`));
 
 module.exports = app;
